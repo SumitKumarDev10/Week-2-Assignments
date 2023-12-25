@@ -46,4 +46,64 @@ const app = express();
 
 app.use(bodyParser.json());
 
+let todoList = [{id: 7, description: 'lalalalalla'}]
+let id = 1
+
+app.get('/todos', (req, res) => {
+  res.send(todoList)
+})
+
+app.get('/todos/:id', (req, res) => {
+  const todoId = req.params.id
+  
+  todoList.forEach((todo) => {
+    //console.log(todo.id, todoId)
+    if(todo.id == todoId) {
+      res.send(todo)
+    }
+  })
+  res.send('Todo not found.')
+})
+
+app.post('/todos', (req, res) => {
+  const {title, completed, description} = req.body
+  id ++
+  todoList.push({id: id, title: title, completed: completed, description: description})
+  console.log(todoList)
+  res.status(201).send('Success!')
+})
+
+app.put('/todos/:id', (req, res) => {
+  const id = Number(req.params.id)
+  const {title, completed} = req.body
+  const indexToModify = todoList.findIndex(todo => {console.log(todo.id, id);if(todo.id === id) {
+    return true
+  }});
+  
+  if(indexToModify == -1) {
+    res.status(404).send('Failed to Update Todo')
+  } else {
+    todoList[indexToModify] = {id: id, title: title, completed: completed, description: todoList[indexToModify].description}
+    console.log(todoList, indexToModify)
+    res.status(200).send('Successfully Updated the Todo')
+  }
+})
+
+app.delete('/todos/:id', (req, res) => {
+  const todoId = parseInt(req.params.id);
+  const indexToRemove = todoList.findIndex(todo => {console.log(todo.id, todoId);if(todo.id === todoId) {
+    return true
+  }});
+  if (indexToRemove !== -1) {
+    const removedTodo = todoList.splice(indexToRemove, 1)[0];
+    res.status(200).json({ message: 'Todo removed successfully', removedTodo });
+  } else {
+    res.status(404).json({ error: 'Todo not found' });
+  }
+});
+
+app.listen(3000, () => {
+  console.log('App Listening On Port 3000')
+})
+
 module.exports = app;
