@@ -2,7 +2,7 @@ const https = require('https'); // Use 'https' instead of 'http'
 const { v4: uuidv4 } = require('uuid');
 const server = require('../todoServer');
 const port = 3000;
-const baseUrl = `https://${port}-sumitkumard-week2assign-ct60cr80zuv.ws-us107.gitpod.io/`;
+const baseUrl = `http://localhost:3001/`;
 
 describe('Todo API', () => {
   let createdTodoId;
